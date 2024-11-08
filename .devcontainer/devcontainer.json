@@ -9,14 +9,15 @@
 	"features": {
 		"ghcr.io/devcontainers/features/node:1": {
 			"version": "22"
-    	}
+    	},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "cd backend && pip install --user -r requirements.txt",
+	"postCreateCommand": "cd backend && pip install langgraph-cli && pip install --user -r requirements.txt",
 	"customizations": {
 		"vscode": {
 			"extensions": [
