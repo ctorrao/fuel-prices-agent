@@ -12,4 +12,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
+      working-directory: backend
       run: docker build . --file Dockerfile --tag fuel-prices-agent-backend:$(date +%s)
