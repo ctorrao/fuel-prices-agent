@@ -14,3 +14,5 @@ jobs:
     - name: Build the Docker image
       working-directory: backend
       run: docker build . --file Dockerfile --tag fuel-prices-agent-backend:$(date +%s)
+    - name: Push the Docker image to GitHub Container Registry
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
