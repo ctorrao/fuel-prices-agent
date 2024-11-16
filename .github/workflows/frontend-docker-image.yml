@@ -1,4 +1,4 @@
-name: Backend Docker Image CI
+name: Frontend Docker Image CI
 
 on:
   push:
@@ -16,11 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      working-directory: backend
-      run: docker build . --file Dockerfile --tag fuel-prices-agent-backend:${{ env.TAG }}
+      working-directory: frontend
+      run: docker build . --file Dockerfile --tag fuel-prices-agent-frontend:${{ env.TAG }}
     - name: Login Docker to GitHub Container Registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
     - name: Tag the Docker image
-      run: docker tag fuel-prices-agent-backend:${{ env.TAG }} ghcr.io/${{ github.repository }}:${{ env.TAG }}
+      run: docker tag fuel-prices-agent-frontend:${{ env.TAG }} ghcr.io/${{ github.repository }}:${{ env.TAG }}
     - name: Push the Docker image
       run: docker push ghcr.io/${{ github.repository }}:${{ env.TAG }}

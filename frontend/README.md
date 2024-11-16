@@ -21,16 +21,16 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Docker
+### Docker
 
 To build the Docker image for the frontend, run the following command:
 
 ```bash
-docker build -t frontend .
+docker build -t fuel-prices-agent-frontend .
 ```
 
 To run the Docker container, use the following command:
 
 ```bash
-docker run -p 3000:3000 frontend
+docker run -p 3000:3000 fuel-prices-agent-frontend
 ```
