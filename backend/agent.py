@@ -100,13 +100,14 @@ def get_fuel_prices(category: str, district_id: int, municipality_ids: list[int]
     else:
         raise ValueError("Invalid gas category")
 
-def convert_euros_to_dollars(euros: str) -> float:
+def convert_euros_to_dollars(euros: float) -> float:
     """Convert euros (EUR) to dollars (USD).
 
     Args:
         euros: amount in euros (EUR)
     """
-    usd = float(euros.trim(' ', '€')) * 1.13
+    #usd = float(euros.trim(' ', '€')) * 1.13
+    usd = euros * 1.13
     return usd
 
 # output = get_gas_prices("regular", 11, [])
