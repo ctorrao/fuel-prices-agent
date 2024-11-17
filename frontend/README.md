@@ -30,7 +30,6 @@ docker build -t fuel-prices-agent-frontend .
 ```
 
 To run the Docker container, use the following command:
-
 ```bash
-docker run -p 3000:3000 fuel-prices-agent-frontend
+docker run -p 3000:3000 --env-file .env fuel-prices-agent-frontend
 ```
