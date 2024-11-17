@@ -2,7 +2,7 @@
 LangGraph AI Agent to answer the Gas Prices from Portugal Districts or Municipalities.
 The agent uses the official API from the Portuguese Government to get the prices.
 The default district and municipality is "Lisboa".
-The default category of fuel is "Gasoline".
+The default category of fuel is "Petrol".
 
 ## Example of Usage
 - "Price of petrol in Lisbon?"
