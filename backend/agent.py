@@ -13,7 +13,15 @@ llm = ChatOpenAI(model="gpt-4o-mini")
 llm_with_tools = llm.bind_tools(tools)
 
 # System message
-sys_msg = SystemMessage(content="You are a helpful assistant tasked with finding the fuel prices by category (petrol or diesel), for a given district and municipality. The default district is Lisbon and the default category is petrol.")
+sys_msg = SystemMessage(
+    content=(
+        "You are a helpful assistant tasked with finding the fuel stations prices by category "
+        "(petrol or diesel), for a given district and municipality. "
+        "Optionally the user can specify the brand of the station."
+        "The default district is Lisbon and the default category is petrol."
+        "When you are returing station information include always the Google Maps link."
+    )
+)
 
 # Node
 def assistant(state: MessagesState):
