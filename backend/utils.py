@@ -15,3 +15,13 @@ def process_api_fuel_price_response(response, max_fuel_results):
         return prices[:max_fuel_results]
     else:
         raise ValueError("Failed to get gas price from API.")
+
+def process_api_generic_response(response):
+    if (response.status_code not in [200, 299]):
+        raise ValueError(f"Failed to get data from API. Returned HTTP Status Code: {response.status_code}")
+    
+    data = response.json()
+    if data and "resultado" in data and data["resultado"] is not None:
+        return data["resultado"]
+    else:
+        raise ValueError("Failed to get data from API.")

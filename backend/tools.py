@@ -1,75 +1,45 @@
 import requests
-
 from utils import *
 
 petrol_fuel_id = 3201
 diesel_fuel_id = 2101
 max_fuel_results = 10
 
-# Districts
-dict_distritos = {
-    "Aveiro": 1,
-    "Beja": 2,
-    "Braga": 3,
-    "Bragança": 4,
-    "Castelo Branco": 5,
-    "Coimbra": 6,
-    "Évora": 7,
-    "Faro": 8,
-    "Guarda": 9,
-    "Leiria": 10,
-    "Lisboa": 11,
-    "Lisbon": 11,
-    "Portalegre": 12,
-    "Porto": 13,
-    "Santarém": 14,
-    "Setúbal": 15,
-    "Viana do Castelo": 16,
-    "Vila Real": 17,
-    "Viseu": 18
-}
+def get_districts() -> list[str]:
+    """Get all districts names and ids."""
+    districts = list[str]()
+    response = requests.get("https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetDistritos")
+    data = process_api_generic_response(response)
+    if data and len(data) > 0:
+        for result in data:
+            districts.append(result)
+        return districts
+    else:
+        raise ValueError("Failed to get districts from API.")
 
-def get_district_id(district: str) -> int:
-    """Get district id based on district name.
-    Available districts: Aveiro, Beja, Braga, Bragança, Castelo Branco, Coimbra, Évora, Faro, Guarda, Leiria, Lisboa, Lisbon, Portalegre, Porto, Santarém, Setúbal, Viana do Castelo, Vila Real, Viseu
+def get_municipalities(district_id: int) -> list[str]:
+    """Get all municipalities from a specific district.
 
     Args:
-        district: name of district
+        district_id: id of the district
     """
-    if district in dict_distritos:
-        return dict_distritos[district]
+    municipalities = list[str]()
+    response = requests.get(f"https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetMunicipios?idDistrito={district_id}")
+    data = process_api_generic_response(response)
+    if data and len(data) > 0:
+        for result in data:
+            municipalities.append(result)
+        return municipalities
     else:
-        raise ValueError("Invalid district name")
-
-def get_municipaly_ids(district: str) -> list[str]:
-    """Get municipality ids based on district name.
-    Available districts: Aveiro, Beja, Braga, Bragança, Castelo Branco, Coimbra, Évora, Faro, Guarda, Leiria, Lisboa, Lisbon, Portalegre, Porto, Santarém, Setúbal, Viana do Castelo, Vila Real, Viseu
-
-    Args:
-        district: name of district
-    """
-    ids = list[str]()
-    if district in dict_distritos:
-        response = requests.get(f"https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetMunicipios?idDistrito={dict_distritos[district]}")
-        data = response.json()
-        if data and "resultado" in data and len(data["resultado"]) > 0:
-            for result in data["resultado"]:
-                municipaly_id = result["Id"]
-                municipaly_name = result["Descritivo"]
-                ids.append(str(f"Id: {municipaly_id} | Name: {municipaly_name}"))
-            return ids
-        else:
-            raise ValueError("Failed to get municipaly ids from API.")
-    else:
-        raise ValueError("Invalid district name")
+        raise ValueError("Failed to get municipalities from API.")
 
 def get_brands() -> list[str]:
     """Get fuel brands."""
     brands = list[str]()
     response = requests.get("https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetMarcas")
-    data = response.json()
-    if data and "resultado" in data and len(data["resultado"]) > 0:
-        for result in data["resultado"]:
+    data = process_api_generic_response(response)
+    if data and len(data) > 0:
+        for result in data:
             brands.append(result)
         return brands
     else:
