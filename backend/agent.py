@@ -1,4 +1,4 @@
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import SystemMessage, AIMessage
 from langchain_openai import ChatOpenAI
 
 from langgraph.graph import START, StateGraph, MessagesState
@@ -24,15 +24,34 @@ sys_msg = SystemMessage(
     )
 )
 
-# Node
+# Greeting message
+greeting_msg = AIMessage(
+    content=(
+        "Hello! I am a assistant to find the fuel stations prices by fuel type (petrol or diesel), for a given district or municipalities. "
+        "Optionally you can filter by fuel brand.\n"
+        "Try some examples:\n'prices in Lisbon',\n'diesel prices in Lisbon for Galp',\n'petrol prices'"
+    )
+)
+
+# Greeting Node
+def greeting(state: MessagesState):
+    # is the first message?
+    if state["messages"]:
+        return {"messages": [greeting_msg]}
+    else:
+        return {"messages": []}
+
+# Assistant Node
 def assistant(state: MessagesState):
    return {"messages": [llm_with_tools.invoke([sys_msg] + state["messages"])]}
 
 # Build graph
 builder = StateGraph(MessagesState)
+builder.add_node("greeting", greeting)
 builder.add_node("assistant", assistant)
 builder.add_node("tools", ToolNode(tools))
-builder.add_edge(START, "assistant")
+builder.add_edge(START, "greeting")
+builder.add_edge("greeting", "assistant")
 builder.add_conditional_edges(
     "assistant",
     # If the latest message (result) from assistant is a tool call -> tools_condition routes to tools
