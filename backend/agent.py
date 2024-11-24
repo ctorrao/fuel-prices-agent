@@ -47,11 +47,12 @@ def assistant(state: MessagesState):
 
 # Build graph
 builder = StateGraph(MessagesState)
-builder.add_node("greeting", greeting)
+#builder.add_node("greeting", greeting)
 builder.add_node("assistant", assistant)
 builder.add_node("tools", ToolNode(tools))
-builder.add_edge(START, "greeting")
-builder.add_edge("greeting", "assistant")
+builder.add_edge(START, "assistant")
+#builder.add_edge(START, "greeting")
+#builder.add_edge("greeting", "assistant")
 builder.add_conditional_edges(
     "assistant",
     # If the latest message (result) from assistant is a tool call -> tools_condition routes to tools
