@@ -78,14 +78,14 @@ def get_fuel_prices(category: str, district_id: int, municipality_ids: list[int]
     """
     return get_fuel_prices_by_brand(category, district_id, municipality_ids, 0)
 
-def convert_euros_to_dollars(euros: float) -> float:
-    """Convert euros (EUR) to dollars (USD).
-
-    Args:
-        euros: amount in euros (EUR)
-    """
-    usd = euros * 1.13
-    return usd
+#def convert_euros_to_dollars(euros: float) -> float:
+#    """Convert euros (EUR) to dollars (USD).
+#
+#    Args:
+#        euros: amount in euros (EUR)
+#    """
+#    usd = euros * 1.13
+#    return usd
 
 def available_currencies_to_convert() -> list[tuple[str, str]]:
     """Get all available currencies possible to convert."""
