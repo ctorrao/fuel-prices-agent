@@ -51,7 +51,7 @@ def assistant(state: MessagesState):
 builder = StateGraph(MessagesState)
 #builder.add_node("greeting", greeting)
 builder.add_node("assistant", assistant)
-builder.add_node("tools", ToolNode(tools))
+builder.add_node("tools", ToolNode(tools_for_llm))
 builder.add_edge(START, "assistant")
 #builder.add_edge(START, "greeting")
 #builder.add_edge("greeting", "assistant")
