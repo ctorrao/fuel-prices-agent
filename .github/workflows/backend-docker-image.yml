@@ -3,6 +3,8 @@ name: Backend Docker Image CI
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - "backend/**"
 
 jobs:
   build:
