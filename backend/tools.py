@@ -7,19 +7,19 @@ diesel_fuel_id = 2101
 max_fuel_results = 10
 max_address_results = 5
 
-def get_address_coordinates(address: str) -> list[str]:
-    """Get geolocation coordinates (latitude and longitude) from a given address, municipalities or district.
-
-    Args:
-        address: address, municipalities or district to get coordinates (latitude and longitude)
-    """
-    encoded_address = urllib.parse.quote(address)
-    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={encoded_address}&countrycodes=pt&limit={max_address_results}&format=json", headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
-    data = response.json()
-    if data and len(data) > 0:
-        return data
-    else:
-        raise ValueError("Failed to get address coordinates from API.")
+#def get_address_coordinates(address: str) -> list[str]:
+#    """Get geolocation coordinates (latitude and longitude) from a given address, municipalities or district.#
+#
+#    Args:
+#        address: address, municipalities or district to get coordinates (latitude and longitude)
+#    """
+#    encoded_address = urllib.parse.quote(address)
+#    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={encoded_address}&countrycodes=pt&limit={max_address_results}&format=json", headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
+#    data = response.json()
+#    if data and len(data) > 0:
+#        return data
+#    else:
+#        raise ValueError("Failed to get address coordinates from API.")
 
 def get_districts() -> list[str]:
     """Get all districts names and ids."""
