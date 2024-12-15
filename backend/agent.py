@@ -6,8 +6,8 @@ from langgraph.prebuilt import tools_condition, ToolNode
 
 from tools import *
 
-tools = [get_districts, get_municipalities, get_brands, get_fuel_prices, get_fuel_prices_by_brand, convert_currency, available_currencies_to_convert]
-#tools = [func for name, func in inspect.getmembers(tools, inspect.isfunction)]
+#tools = [get_districts, get_municipalities, get_brands, get_fuel_prices, get_fuel_prices_by_brand, convert_currency, available_currencies_to_convert]
+tools = [func for name, func in inspect.getmembers(tools, inspect.isfunction)]
 
 # Define LLM with bound tools
 llm = ChatOpenAI(model="gpt-4o-mini")
