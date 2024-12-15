@@ -4,6 +4,23 @@ from utils import *
 petrol_fuel_id = 3201
 diesel_fuel_id = 2101
 max_fuel_results = 10
+max_address_results = 5
+
+def get_address_coordinates(address: str) -> list[str]:
+    """Get geolocation coordinates (latitude and longitude) from a given address, municipalities or district.
+
+    Args:
+        address: address, municipalities or district to get coordinates (latitude and longitude)
+    """
+    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={address}&countrycodes=pt&format=json&limit={max_address_results}")
+    data = response.json()
+    if data and len(data) > 0:
+        coordinates = list[str]()
+        for result in data:
+            coordinates.append((result["lat"], result["lon"]))
+        return coordinates
+    else:
+        raise ValueError("Failed to get address coordinates from API.")
 
 def get_districts() -> list[str]:
     """Get all districts names and ids."""

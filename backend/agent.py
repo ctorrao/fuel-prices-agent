@@ -4,11 +4,11 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import START, StateGraph, MessagesState
 from langgraph.prebuilt import tools_condition, ToolNode
 
-#import inspect
+import inspect
 import tools
 
-tools_for_llm = [tools.get_districts, tools.get_municipalities, tools.get_brands, tools.get_fuel_prices, tools.get_fuel_prices_by_brand, tools.convert_currency, tools.available_currencies_to_convert]
-#tools_for_llm = [func for name, func in inspect.getmembers(tools, inspect.isfunction)]
+#tools_for_llm = [tools.get_districts, tools.get_municipalities, tools.get_brands, tools.get_fuel_prices, tools.get_fuel_prices_by_brand, tools.convert_currency, tools.available_currencies_to_convert]
+tools_for_llm = [func for name, func in inspect.getmembers(tools, inspect.isfunction)]
 
 # Define LLM with bound tools
 llm = ChatOpenAI(model="gpt-4o-mini")
