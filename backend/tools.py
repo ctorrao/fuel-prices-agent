@@ -1,5 +1,6 @@
 import requests
 import utils
+import urllib.parse
 
 petrol_fuel_id = 3201
 diesel_fuel_id = 2101
@@ -12,14 +13,11 @@ def get_address_coordinates(address: str) -> list[str]:
     Args:
         address: address, municipalities or district to get coordinates (latitude and longitude)
     """
-    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={address}&countrycodes=pt&limit={max_address_results}&format=json", headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
+    encoded_address = urllib.parse.quote(address)
+    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={encoded_address}&countrycodes=pt&limit={max_address_results}&format=json", headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
     data = response.json()
     if data and len(data) > 0:
         return data
-        #coordinates = list[str]()
-        #for result in data:
-        #    coordinates.append((result["lat"], result["lon"]))
-        #return coordinates
     else:
         raise ValueError("Failed to get address coordinates from API.")
 
@@ -69,7 +67,7 @@ def get_fuel_prices_by_brand(category: str, district_id: int, municipality_ids: 
     Args:
         category: type of fuel (petrol, diesel)
         district_id: district id (default is 11 for Lisbon)
-        municipality_ids: list of municipality ids
+        municipality_ids: list of municipality ids (default is empty for all municipalities)
         brand_id: brand id (default is 0 for all brands)
     """
     brand_id_str = "" if brand_id == 0 else str(brand_id)
@@ -92,7 +90,7 @@ def get_fuel_prices(category: str, district_id: int, municipality_ids: list[int]
     Args:
         category: type of fuel (petrol, diesel)
         district_id: district id (default is 11 for Lisbon)
-        municipality_ids: list of municipality ids
+        municipality_ids: list of municipality ids (default is empty for all municipalities)
     """
     return get_fuel_prices_by_brand(category, district_id, municipality_ids, 0)
 
