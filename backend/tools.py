@@ -9,7 +9,7 @@ def get_districts() -> list[str]:
     """Get all districts names and ids."""
     districts = list[str]()
     response = requests.get("https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetDistritos")
-    data = process_api_generic_response(response)
+    data = process_api_fuel_generic_response(response)
     if data and len(data) > 0:
         for result in data:
             districts.append(result)
@@ -25,7 +25,7 @@ def get_municipalities(district_id: int) -> list[str]:
     """
     municipalities = list[str]()
     response = requests.get(f"https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetMunicipios?idDistrito={district_id}")
-    data = process_api_generic_response(response)
+    data = process_api_fuel_generic_response(response)
     if data and len(data) > 0:
         for result in data:
             municipalities.append(result)
@@ -37,7 +37,7 @@ def get_brands() -> list[str]:
     """Get fuel brands."""
     brands = list[str]()
     response = requests.get("https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetMarcas")
-    data = process_api_generic_response(response)
+    data = process_api_fuel_generic_response(response)
     if data and len(data) > 0:
         for result in data:
             brands.append(result)
@@ -86,3 +86,24 @@ def convert_euros_to_dollars(euros: float) -> float:
     """
     usd = euros * 1.13
     return usd
+
+def available_currencies_to_convert() -> list[tuple[str, str]]:
+    """Get all available currencies possible to convert."""
+    currencies = list[tuple[str, str]]()
+    response = requests.get("https://api.frankfurter.dev/v1/currencies")
+    data = process_api_currency_generic_response(response)
+    for currency in data.items():
+        currencies.append((currency[0],currency[1]))
+    return currencies
+
+def convert_currency(amount: float, from_currency: str, to_currency: str) -> float:
+    """Convert currency from one to another.
+
+    Args:
+        amount: amount to convert
+        from_currency: currency symbol to convert from
+        to_currency: currency symbol to convert to
+    """
+    response = requests.get(f"https://api.frankfurter.dev/v1/latest?&amount={str(amount)}&base={from_currency}&symbols={to_currency}")
+    data = process_api_currency_generic_response(response)
+    return data["rates"][to_currency]
