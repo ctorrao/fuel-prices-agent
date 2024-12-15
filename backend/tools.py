@@ -1,5 +1,5 @@
 import requests
-from utils import *
+import utils
 
 petrol_fuel_id = 3201
 diesel_fuel_id = 2101
@@ -12,13 +12,14 @@ def get_address_coordinates(address: str) -> list[str]:
     Args:
         address: address, municipalities or district to get coordinates (latitude and longitude)
     """
-    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={address}&countrycodes=pt&format=json&limit={max_address_results}")
+    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={address}&countrycodes=pt&limit={max_address_results}&format=json", headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
     data = response.json()
     if data and len(data) > 0:
-        coordinates = list[str]()
-        for result in data:
-            coordinates.append((result["lat"], result["lon"]))
-        return coordinates
+        return data
+        #coordinates = list[str]()
+        #for result in data:
+        #    coordinates.append((result["lat"], result["lon"]))
+        #return coordinates
     else:
         raise ValueError("Failed to get address coordinates from API.")
 
@@ -26,7 +27,7 @@ def get_districts() -> list[str]:
     """Get all districts names and ids."""
     districts = list[str]()
     response = requests.get("https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetDistritos")
-    data = process_api_fuel_generic_response(response)
+    data = utils.process_api_fuel_generic_response(response)
     if data and len(data) > 0:
         for result in data:
             districts.append(result)
@@ -42,7 +43,7 @@ def get_municipalities(district_id: int) -> list[str]:
     """
     municipalities = list[str]()
     response = requests.get(f"https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetMunicipios?idDistrito={district_id}")
-    data = process_api_fuel_generic_response(response)
+    data = utils.process_api_fuel_generic_response(response)
     if data and len(data) > 0:
         for result in data:
             municipalities.append(result)
@@ -54,7 +55,7 @@ def get_brands() -> list[str]:
     """Get fuel brands."""
     brands = list[str]()
     response = requests.get("https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetMarcas")
-    data = process_api_fuel_generic_response(response)
+    data = utils.process_api_fuel_generic_response(response)
     if data and len(data) > 0:
         for result in data:
             brands.append(result)
@@ -78,10 +79,10 @@ def get_fuel_prices_by_brand(category: str, district_id: int, municipality_ids: 
         municipality_ids_str = "%2C".join(map(str, municipality_ids))
     if category == "petrol":
         response = requests.get(f"https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/PesquisarPostos?idsTiposComb={petrol_fuel_id}&idMarca={brand_id_str}&idTipoPosto=&idDistrito={district_id}&idsMunicipios={municipality_ids_str}&qtdPorPagina={max_fuel_results}&pagina=1")
-        return process_api_fuel_price_response(response, max_fuel_results)
+        return utils.process_api_fuel_price_response(response, max_fuel_results)
     elif category == "diesel":
         response = requests.get(f"https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/PesquisarPostos?idsTiposComb={diesel_fuel_id}&idMarca={brand_id_str}&idTipoPosto=&idDistrito={district_id}&idsMunicipios={municipality_ids_str}&qtdPorPagina={max_fuel_results}&pagina=1")
-        return process_api_fuel_price_response(response, max_fuel_results)
+        return utils.process_api_fuel_price_response(response, max_fuel_results)
     else:
         raise ValueError("Invalid gas category")
 
@@ -95,20 +96,11 @@ def get_fuel_prices(category: str, district_id: int, municipality_ids: list[int]
     """
     return get_fuel_prices_by_brand(category, district_id, municipality_ids, 0)
 
-#def convert_euros_to_dollars(euros: float) -> float:
-#    """Convert euros (EUR) to dollars (USD).
-#
-#    Args:
-#        euros: amount in euros (EUR)
-#    """
-#    usd = euros * 1.13
-#    return usd
-
 def available_currencies_to_convert() -> list[tuple[str, str]]:
     """Get all available currencies possible to convert."""
     currencies = list[tuple[str, str]]()
     response = requests.get("https://api.frankfurter.dev/v1/currencies")
-    data = process_api_currency_generic_response(response)
+    data = utils.process_api_currency_generic_response(response)
     for currency in data.items():
         currencies.append((currency[0],currency[1]))
     return currencies
@@ -122,5 +114,5 @@ def convert_currency(amount: float, from_currency: str, to_currency: str) -> flo
         to_currency: currency symbol to convert to
     """
     response = requests.get(f"https://api.frankfurter.dev/v1/latest?&amount={str(amount)}&base={from_currency}&symbols={to_currency}")
-    data = process_api_currency_generic_response(response)
+    data = utils.process_api_currency_generic_response(response)
     return data["rates"][to_currency]
