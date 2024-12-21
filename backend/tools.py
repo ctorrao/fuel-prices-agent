@@ -1,3 +1,5 @@
+from langchain_community.utilities.tavily_search import TavilySearchAPIWrapper
+
 import requests
 import utils
 import urllib.parse
@@ -6,6 +8,25 @@ petrol_fuel_id = 3201
 diesel_fuel_id = 2101
 max_fuel_results = 10
 max_address_results = 5
+
+def get_web_future_fuel_prices_changes() -> str:
+    """Search the web to know future (tipically for next week) fuel prices flutuations or differences."""
+    # Search
+    tavily_search = TavilySearchAPIWrapper() #TavilySearchResults(max_results=3, include_raw_content=True)
+    
+    search_query = f"Preços combustiveis na próxima semana on site:contaspoupanca.pt"
+    #search_docs = tavily_search.invoke(search_instructions)
+    search_docs = tavily_search.raw_results(search_query, max_results=1, include_raw_content=True)
+    
+     # Format
+    formatted_search_docs = "\n\n---\n\n".join(
+        [
+            f'<Document href="{doc["url"]}"/>\n{doc["raw_content"]}</Document>'
+            for doc in search_docs["results"]
+        ]
+    )
+
+    return formatted_search_docs
 
 #def get_address_coordinates(address: str) -> list[str]:
 #    """Get geolocation coordinates (latitude and longitude) from a given address, municipalities or district.#
