@@ -21,8 +21,11 @@ Price of petrol in Lisbon?
 Diesel price in Porto? Answer in a table format.
 ```
 ```
-Gasoline price in Loures?
+Gasoline price in Lagos for the brand Galp?
 ```
 ```
-Prices of petrol in Loures? please answer in a table format including the price changes for next week.
+Prices of petrol in Lagos? please answer in bullets format, please include the current price and the next week expected price side by side
+```
+```
+Prices of diesel in Faro? please answer in a table format including the price changes for next week.
 ```
