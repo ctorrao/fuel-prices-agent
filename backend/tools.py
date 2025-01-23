@@ -18,7 +18,7 @@ def get_web_future_fuel_prices_changes() -> str:
     #search_docs = tavily_search.invoke(search_instructions)
     search_docs = tavily_search.raw_results(search_query, max_results=1, include_raw_content=True)
     
-     # Format
+    # Format
     formatted_search_docs = "\n\n---\n\n".join(
         [
             f'<Document href="{doc["url"]}"/>\n{doc["raw_content"]}</Document>'
@@ -28,47 +28,21 @@ def get_web_future_fuel_prices_changes() -> str:
 
     return formatted_search_docs
 
-#def get_address_coordinates(address: str) -> list[str]:
-#    """Get geolocation coordinates (latitude and longitude) from a given address, municipalities or district.#
-#
-#    Args:
-#        address: address, municipalities or district to get coordinates (latitude and longitude)
-#    """
-#    encoded_address = urllib.parse.quote(address)
-#    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={encoded_address}&countrycodes=pt&limit={max_address_results}&format=json", headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
-#    data = response.json()
-#    if data and len(data) > 0:
-#        return data
-#    else:
-#        raise ValueError("Failed to get address coordinates from API.")
-
-def get_districts() -> list[str]:
-    """Get all districts names and ids."""
+def get_districts_and_municipalities() -> list[str]:
+    """Get all districts and municipalities names and ids."""
     districts = list[str]()
     response = requests.get("https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetDistritos")
     data = utils.process_api_fuel_generic_response(response)
     if data and len(data) > 0:
         for result in data:
+            municipalities = list[str]()
+            response = requests.get(f"https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetMunicipios?idDistrito={result['Id']}")
+            municipalities = utils.process_api_fuel_generic_response(response)
+            result["Municipalities"] = municipalities
             districts.append(result)
         return districts
     else:
-        raise ValueError("Failed to get districts from API.")
-
-def get_municipalities(district_id: int) -> list[str]:
-    """Get all municipalities from a specific district.
-
-    Args:
-        district_id: id of the district
-    """
-    municipalities = list[str]()
-    response = requests.get(f"https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetMunicipios?idDistrito={district_id}")
-    data = utils.process_api_fuel_generic_response(response)
-    if data and len(data) > 0:
-        for result in data:
-            municipalities.append(result)
-        return municipalities
-    else:
-        raise ValueError("Failed to get municipalities from API.")
+        raise ValueError("Failed to get districts or municipalities from API.")
 
 def get_brands() -> list[str]:
     """Get fuel brands."""
