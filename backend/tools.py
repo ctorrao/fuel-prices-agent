@@ -1,5 +1,5 @@
 from langchain_community.utilities.tavily_search import TavilySearchAPIWrapper
-
+from datetime import datetime
 import requests
 import utils
 import urllib.parse
@@ -19,7 +19,7 @@ def get_web_future_fuel_prices_changes() -> str:
     search_docs = tavily_search.raw_results(search_query, max_results=1, include_raw_content=True)
     
     # Format
-    formatted_search_docs = "\n\n---\n\n".join(
+    formatted_search_docs = f"\n\nDate Today: {datetime.today().strftime('%Y-%m-%d')}\n\n---\n\n".join(
         [
             f'<Document href="{doc["url"]}"/>\n{doc["raw_content"]}</Document>'
             for doc in search_docs["results"]
